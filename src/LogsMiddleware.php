@@ -1,6 +1,6 @@
 <?php
 
-namespace Woody\Middleware\Exception;
+namespace Woody\Middleware\Logs;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,7 +12,7 @@ use Woody\Http\Server\Middleware\MiddlewareInterface;
 /**
  * Class LogsMiddleware
  *
- * @package Woody\Middleware\Exception
+ * @package Woody\Middleware\Logs
  */
 class LogsMiddleware implements MiddlewareInterface
 {
