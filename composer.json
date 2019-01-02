@@ -1,0 +1,27 @@
+{
+    "name": "woody/middleware-logs",
+    "description": "",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastien Malot",
+            "email": "sebastien@malot.fr"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "monolog/monolog": "^1.20",
+        "woody/http-server-middleware": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Woody\\Middleware\\Logs\\": "src"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
+}
