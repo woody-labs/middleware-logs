@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Woody\Http\Server\Middleware\MiddlewareInterface;
+use Woody\Middleware\CorrelationId\CorrelationIdMiddleware;
 
 /**
  * Class LogsMiddleware
@@ -57,6 +58,11 @@ class LogsMiddleware implements MiddlewareInterface
             throw $t;
         } finally {
             $serverParams = $this->getServerParams($request);
+            $context = [];
+
+            if ($correlationId = $request->getAttribute(CorrelationIdMiddleware::ATTRIBUTE_NAME)) {
+                $context['correlation-id'] = $correlationId;
+            }
 
             $this->logger->info(
                 sprintf(
@@ -69,7 +75,8 @@ class LogsMiddleware implements MiddlewareInterface
                     $response->getBody()->getSize() ?? 0,
                     $request->getHeaderLine('Referer') ?: '-',
                     str_replace('"', '', $request->getHeaderLine('User-Agent')) ?: '-'
-                )
+                ),
+                $context
             );
         }
 
