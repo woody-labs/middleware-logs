@@ -51,6 +51,8 @@ class LogsMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $startTime = microtime(true);
+
         try {
             $response = $handler->handle($request);
         } catch (\Throwable $t) {
@@ -58,18 +60,22 @@ class LogsMiddleware implements MiddlewareInterface
             throw $t;
         } finally {
             $serverParams = $this->getServerParams($request);
-            $context = [];
+            $context = [
+                'duration' => microtime(true) - $startTime,
+            ];
 
             if ($correlationId = $request->getAttribute(CorrelationIdMiddleware::ATTRIBUTE_NAME)) {
                 $context['correlation-id'] = $correlationId;
             }
 
+            $uri = $request->getUri();
+
             $this->logger->info(
                 sprintf(
                     '%s - - "%s %s %s" %d %d "%s" "%s"',
-                    $this->getRemoteAddr($serverParams),
+                    $uri->getHost(),
                     $serverParams['REQUEST_METHOD'],
-                    $serverParams['REQUEST_URI'],
+                    $uri->getPath().($uri->getQuery() ? '?'.$uri->getQuery() : ''),
                     $serverParams['SERVER_PROTOCOL'],
                     $response->getStatusCode(),
                     $response->getBody()->getSize() ?? 0,
@@ -94,8 +100,10 @@ class LogsMiddleware implements MiddlewareInterface
         $serverParams = array_change_key_case($serverParams, CASE_UPPER);
 
         foreach ($request->getHeaders() as $name => $headers) {
+            $name = 'HTTP_'.strtoupper(str_replace('-', '_', $name));
+
             foreach ($headers as $header) {
-                $serverParams['HTTP_'.strtoupper(str_replace('-', '_', $name))] = $header;
+                $serverParams[$name] = $header;
             }
         }
 
