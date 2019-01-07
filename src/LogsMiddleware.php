@@ -9,7 +9,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Woody\Http\Server\Middleware\MiddlewareInterface;
-use Woody\Middleware\CorrelationId\CorrelationIdMiddleware;
 
 /**
  * Class LogsMiddleware
@@ -64,8 +63,10 @@ class LogsMiddleware implements MiddlewareInterface
                 'duration' => microtime(true) - $startTime,
             ];
 
-            if ($correlationId = $request->getAttribute(CorrelationIdMiddleware::ATTRIBUTE_NAME)) {
-                $context['correlation-id'] = $correlationId;
+            if (class_exists('\Woody\Middleware\CorrelationId\CorrelationIdMiddleware')) {
+                if ($correlationId = $request->getAttribute(\Woody\Middleware\CorrelationId\CorrelationIdMiddleware::ATTRIBUTE_NAME)) {
+                    $context['correlation-id'] = $correlationId;
+                }
             }
 
             $uri = $request->getUri();
