@@ -58,9 +58,10 @@ class LogsMiddleware implements MiddlewareInterface
             // Bubble exception.
             throw $t;
         } finally {
+            $duration = microtime(true) - $startTime;
             $serverParams = $this->getServerParams($request);
             $context = [
-                'duration' => microtime(true) - $startTime,
+                'duration' => $duration,
             ];
 
             if (class_exists('\Woody\Middleware\CorrelationId\CorrelationIdMiddleware')) {
@@ -87,7 +88,7 @@ class LogsMiddleware implements MiddlewareInterface
             );
         }
 
-        return $response;
+        return $response->withHeader('X-Content-Duration', round($duration * 1000));
     }
 
     /**
