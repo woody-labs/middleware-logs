@@ -43,7 +43,7 @@ class LogsMiddleware implements MiddlewareInterface
      */
     public function isEnabled(bool $debug): bool
     {
-        return $this->logger !== null;
+        return true;
     }
 
     /**
