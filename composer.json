@@ -1,6 +1,6 @@
 {
     "name": "woody/middleware-logs",
-    "description": "",
+    "description": "Middleware PSR-15 compliant which handle Logs",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,8 +11,11 @@
     ],
     "require": {
         "php": "^7.1",
-        "monolog/monolog": "^1.20",
+        "psr/log": "^1.1",
         "woody/http-server-middleware": "dev-master"
+    },
+    "suggest": {
+        "monolog/monolog": "Add monolog support for advanced log integration"
     },
     "autoload": {
         "psr-4": {
