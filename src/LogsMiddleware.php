@@ -27,13 +27,20 @@ class LogsMiddleware implements MiddlewareInterface
     protected $logger;
 
     /**
+     * @var string
+     */
+    protected $level;
+
+    /**
      * LogsMiddleware constructor.
      *
      * @param \Psr\Log\LoggerInterface $logger
+     * @param string $level
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, string $level = 'info')
     {
         $this->logger = $logger;
+        $this->level = $level;
     }
 
     /**
@@ -78,7 +85,8 @@ class LogsMiddleware implements MiddlewareInterface
 
             $uri = $request->getUri();
 
-            $this->logger->info(
+            $this->logger->log(
+                $this->level,
                 sprintf(
                     '%s - - "%s %s %s" %d %d "%s" "%s"',
                     $uri->getHost(),
