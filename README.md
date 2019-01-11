@@ -20,7 +20,7 @@ $dispatcher = new Dispatcher();
 $dispatcher->pipe(new CorrelationIdMiddleware());
 $dispatcher->pipe(new LogsMiddleware($logger));
 $dispatcher->pipe(new ExceptionMiddleware());
-$dispatcher->pipe(new MyAddMiddleware());
+$dispatcher->pipe(new MyAppMiddleware());
 
 // @todo: add other middleware
 
